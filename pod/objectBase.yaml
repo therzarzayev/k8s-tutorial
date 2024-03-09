@@ -1,12 +1,19 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: firstpod
+  name: sudopod
   labels:
-    app: frontend
+    team: DevOps
+    class: a-data
+    stage: production
+    type: AB
 spec:
   containers:
-  - name: nginx
-    image: nginx:latest
-    ports:
-    - containerPort: 80
+    - name: wordpress
+      image: worddspress
+      resources:
+        limits:
+            memory: "256Mi"
+            cpu: "500m"
+      ports:
+        - containerPort: 80

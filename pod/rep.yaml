@@ -1,23 +1,16 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: myapp
+  name: sudo
+  labels:
+    team: DevOps
+    class: a-data
+    stage: production
+    type: AB
 spec:
-  replicas: 4
-  selector:
-    matchLabels:
-      app: myapp
-  template:
-    metadata:
-      labels:
-        app: myapp
-    spec:
-      containers:
-      - name: web-serv
-        image: nginx
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "200m"
-        ports:
-        - containerPort: 80
+  restartPolicy: Never
+  containers:
+    - name: ubuntu
+      image: alpine:latest      
+      command: ['sh', '-c', 'echo "sfdd" && sleep 10']
+      
