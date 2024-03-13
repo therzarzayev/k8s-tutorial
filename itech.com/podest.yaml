@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volsec
+  labels:
+    name: volsec
+spec:
+  containers:
+    - name: volsec
+      image: nginx
+      volumeMounts:
+        - mountPath: /secret
+          name: secret-vol
+  volumes:
+    - name: secret-vol
+      secret:
+        secretName: dbsecret
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: envsec
+  labels:
+    name: envsec
+spec:
+  containers:
+    - name: envsec
+      image: nginx
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+      env:
+        - name: server
+          valueFrom:
+            secretKeyRef:
+              name: dbsecret
+              key: db_server
+        - name: user
+          valueFrom:
+            secretKeyRef:
+              name: dbsecret
+              key: db_user
+        - name: password
+          valueFrom:
+            secretKeyRef:
+              name: dbsecret
+              key: db_password
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: envsecall
+  labels:
+    name: envsecall
+spec:
+  containers:
+    - name: envsecall
+      image: nginx
+      envFrom:
+        - secretRef:
+            name: dbsecret
+      resources:
+        limits:
+          cpu: 100ms
+          memory: 128Mi
